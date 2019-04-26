@@ -52,7 +52,7 @@ def main():
     fehler = [1, 1, 1, 1, 1, 1]
 
     # Formel zur Berechnung der gesuchten Größe
-    formel = (sqrt(4* p**2 * (9 * eta * nu_f / ( 2 * g * (rho_oil - rho_air) ) ) )- B)/(2 * p)
+    formel = (- B/(2*p)) + sqrt((B/(2*p)) ** 2 + ((9 * eta * nu_f)/(2 * g * (rho_oil-rho_air))))
 
     # Einheit (kann der Übersichtlichkeit halber hinzugefügt werden)
     einheit = "m"
