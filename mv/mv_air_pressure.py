@@ -51,7 +51,7 @@ def main():
     # h in m
     
     # Fehler der Messwerte eintragen (in Reihenfolge wie Variablen)
-    fehler = [0.0577, 4, ]
+    fehler = [0.0577, 4, 0]
 
     # Formel zur Berechnung der gesuchten Größe
     formel = 1.00005 * (133.3 * ((1 - 1.6e-4 * T) * l - 4.5e-3 * (T - 20))) * (1 - 2e-7 * h)
