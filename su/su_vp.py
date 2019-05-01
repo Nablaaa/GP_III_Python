@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Apr  6 13:20:49 2019
+Gaussian Uncertainity Propagation 
 
-@author: Eric
+This Programme is supposed to compute the value and the uncertainity
+for the first part of the experiment supraconductivity in GPIII.
 """
 
 
@@ -27,6 +28,8 @@ def Gauss(Ausgangsfunktion, var, fehler):
         
     return gauss
 
+    def propagation():
+
 
 def main():
     """ Hier sollen die Funktion und die Fehlerwerte eingegeben werden. """
@@ -47,7 +50,7 @@ def main():
     
     # Fehler der Messwerte eintragen (in Reihenfolge wie Variablen)
     # in cm eingeben
-    fehler = [50*1e-6 + 5*0.6 * 1e-4, 50*1e-6 + 5*1.9 * 1e-4]
+    fehler = [50*1e-6 + 5* d * 1e-4, 50*1e-6 + 5* h * 1e-4]
 
     # Formel zur Berechnung der gesuchten Grosse
     formel = np.pi * (d/2)**2 * h
@@ -56,6 +59,7 @@ def main():
     einheit = " cm^3"
     
     ####################################################################
+    
     print("Ausgangsformel: ", formel)
     Fehlerformel_quadrat =  Gauss(formel, var=var, fehler=fehler)
     
@@ -79,8 +83,6 @@ def main():
     Endergebnis = sqrt(Fehlerformel_quadrat)   
     print("Fehler: ", Endergebnis, " ", einheit)
     
-    
-
 
 if __name__ == '__main__':
     main()
