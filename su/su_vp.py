@@ -28,8 +28,6 @@ def Gauss(Ausgangsfunktion, var, fehler):
     return gauss
 
 
-
-
 def main():
     """ Hier sollen die Funktion und die Fehlerwerte eingegeben werden. """
 
@@ -44,10 +42,12 @@ def main():
     
     # Messwerte bzw. errechnete Mittelwerte (Reihenfolge entspricht der
     # der Variablen
-    messwerte = [0.71, 1.92]
+    # in cm eingeben
+    messwerte = [0.6, 1.9]
     
     # Fehler der Messwerte eintragen (in Reihenfolge wie Variablen)
-    fehler = [50*1e-6 + 5*0,71 * 1e-4, 50*1e-6 + 5*1,92 * 1e-4]
+    # in cm eingeben
+    fehler = [50*1e-6 + 5*0.6 * 1e-4, 50*1e-6 + 5*1.9 * 1e-4]
 
     # Formel zur Berechnung der gesuchten Grosse
     formel = np.pi * (d/2)**2 * h
@@ -66,19 +66,15 @@ def main():
     i = 0
     for i in range(len(messwerte)):
         formel = formel.subs([(var[i], messwerte[i])])
-        # print(Fehlerformel_quadrat)
     
     # Fehler berechnen
     i = 0
     for i in range(len(messwerte)):
         Fehlerformel_quadrat = Fehlerformel_quadrat.subs([(var[i], messwerte[i])])
-        # print(Fehlerformel_quadrat)
 
     
     # Ergebnis ausgeben
     print("Absolutwert des Ergebnisses: ", formel, " ", einheit)
-#    print("Fehler zum Quadrat: ", Fehlerformel_quadrat)
-#    print( "Bilde nun die Wurzel aus dem Fehler zum Quadrat: ")
     
     Endergebnis = sqrt(Fehlerformel_quadrat)   
     print("Fehler: ", Endergebnis, " ", einheit)
