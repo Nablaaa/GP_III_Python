@@ -37,17 +37,17 @@ def main():
     # Part which has to be edited for each new experiment/formula
 
     # Variablen und deren Formelzeichen festlegen
-    V, Vs, L, L0 = symbols('V Vs L L0')
+    Vc, Vs, L, L0 = symbols('Vc Vs L L0')
     
     """
     VARIABLENBENENNUNG
-    V - effektives Volumen (nicht vollständig gefüllt) 
+    Vc - volume coil
     Vs - volume sample 
     L0 - L without sample 
     """
 
     # Variablen als Liste speichern um spaeter danach abzuleiten
-    var = ['V', 'Vs', 'L', 'L0']
+    var = ['Vc', 'Vs', 'L', 'L0']
     
     # Messwerte bzw. errechnete Mittelwerte (Reihenfolge entspricht der
     # der Variablen)
@@ -57,7 +57,8 @@ def main():
     fehler = [0.012, 0.0096, 0.005*0.3567, 0.00007 ]
 
     # Formel zur Berechnung der gesuchten Grosse
-    formel = V/Vs * (L/L0 - 1)
+    formel = Vc/Vs * (L/L0 - 1)
+    # Herleitung siehe zB ExPhy 2 - Uebungsblatt 9, Aufgabe 2
 
     # Einheit (sollte der uebersichtlichkeit halber hinzugefuegt werden)
     einheit = " "
