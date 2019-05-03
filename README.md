@@ -9,3 +9,6 @@ After this term you′ll find several formulas needed for experiments for modern
 
 - you are the first one working on a new experiment: create a folder with abbreviation of your experiment
 - if there is already a folder with your experiment but there is missing one variable for which you would like to compute the uncertainity: copy Gauss.py and save as (abbreviation of your experiment)_(variable).py in this folder
+
+**Todo**
+- add a python-programme, which can handle uncertainities in plotting so no origin is needed anymore
