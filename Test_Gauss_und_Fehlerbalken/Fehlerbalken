@@ -1,0 +1,184 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May  9 20:16:12 2019
+
+@author: Eric
+
+Das ganze ist noch nicht fertig, aber geht schonmal in eine gute Richtung denke ich.
+Kommentare sind auch noch Mangelware
+"""
+
+import numpy as np
+from matplotlib import pyplot as plt
+from sympy import *
+
+
+
+def Gauss(Funktion, var, messfehler):
+    """ Hier soll die Ableitung gebildet werden und Gauss ausgerechnet werden. """
+    
+    ergebnis = list()
+    i = 0
+    for i in range(len(var)):
+        ableitung = Funktion.diff(var[i])   # Differenzieren
+        faktor = ableitung * messfehler[i]   # Berechnet Wert in der Klammer
+        Fehler = faktor * faktor # berechnet einzelnen Fehler als Quadrat
+        ergebnis.append(Fehler)
+        i = i + 1
+  
+    return np.sum((ergebnis)) 
+
+
+def Fehlerrechnung(Funktion, var, messwerte, messfehler):
+    Fehlerformel_quadrat =  Gauss(Funktion, var=var, messfehler=messfehler)
+    i = 0
+    for i in range(len(messwerte)):
+        Fehlerformel_quadrat = Fehlerformel_quadrat.subs([(var[i], messwerte[i])])
+        # print(Fehlerformel_quadrat)
+
+    Fehler = sqrt(Fehlerformel_quadrat)    
+    return Fehler
+    
+   
+def Absolutwertberechnung(Funktion, var, messwerte):
+    i = 0
+    for i in range(len(messwerte)):
+        Funktion = Funktion.subs([(var[i], messwerte[i])])
+    
+    return Funktion
+
+
+def main():
+    print(__doc__)
+    
+    
+    t, s = symbols('t s')   # Variablen
+    var = ['t', 's']
+    
+    Funktion = s/t
+    einheit = " m/s "    
+    
+    
+    filename = 'Messwerte.txt' # Da sollen die Messdaten liegen
+    
+    messwert1, messwert2 = np.loadtxt(filename, skiprows=1, unpack=True) # Messwerte auslesen
+
+    messwerte = np.zeros( ( 2, len(messwert1) ) ) # 2 D Array für Messwerte
+                                                  # (M,N) = (Anzahl der Messreihen, Länge der Messreihe)
+                                                  
+    
+    messwerte[0,:] = messwert1 # erste Zeile mit Messdaten füllen
+    messwerte[1,:] = messwert2 # zweite Zeile mit Messdaten füllen
+    
+    
+        
+    print("Messwerte: ", messwerte)
+    
+    
+    messfehler = np.zeros(  (2, len(messwert1) ) ) # 2 D Array für Messwerte
+                                                   # (M,N) = (Anzahl der Messreihen, Länge der Messreihe)
+
+    messfehler[0,:] = 0.1 * messwerte[0,:] # veränderlicher Messfehler hier z.B. abhängig von der 1. variable, deshalb 0 
+    messfehler[1,:] = 0.1                  # konstanter Messfehler
+    
+    print("Messfehler ",messfehler)
+    
+
+
+    Absolutwert = np.zeros(len(messwert1))
+   
+    for i in range (len(messwert1)):
+        # Absolutwert ist eine Liste mit Absolutwerten (und zwar für jedes Wertepaar ein Funktionswert)
+        Absolutwert[i] = Absolutwertberechnung(Funktion=Funktion,
+                                                  var=var,
+                                                  messwerte=messwerte[:,i]) # für jede Variable wird der i-te Eintrag
+                                                                            # berechnet und dann i erhöht
+                    
+    Fehlerwert_x = np.zeros(len(messwert1))
+    
+    for i in range (len(messwert1)):
+        Fehlerwert_x[i] = Fehlerrechnung(Funktion=Funktion,
+                                      var = var,
+                                      messwerte=messwerte[:,i],    # (:,i) steht für (alle Variablen, i-ter Messwert)
+                                      messfehler=messfehler[:,i])  # bitte entsprechend so ändern, dass nur die Variablen
+                                                                   # die zum x-Fehler beitragen genutzt werden
+  
+    
+    Fehlerwert_y = np.zeros(len(messwert1))
+    
+    for i in range (len(messwert1)):
+        Fehlerwert_y[i] = Fehlerrechnung(Funktion=Funktion,
+                                      var = var,
+                                      messwerte=messwerte[:,i],    # (:,i) steht für (alle Variablen, i-ter Messwert)
+                                      messfehler=messfehler[:,i])  # bitte entsprechend so ändern, dass nur die Variablen
+                                                                   # die zum y-Fehler beitragen genutzt werden
+
+    
+    print("Absolutwert = ", Absolutwert ,einheit)
+    print("Fehler in x Richtung = ", Fehlerwert_x, einheit)
+    print("Fehler in y Richtung = ", Fehlerwert_y, einheit)
+
+    
+
+
+    
+    
+    fig1 = plt.figure()   
+    
+    ax1 = fig1.add_subplot(1,2,1)
+#    ax1.axis([80, 100, 0.36, 0.4])
+    ax1.set_xlabel("t")
+    ax1.set_ylabel("v")
+    plt.title("Titel")   
+    ax1.grid(True) #Gitternetz
+    
+    ax1.errorbar(messwert1, Absolutwert,ls='', marker='o', markersize = 5,
+                 xerr=Fehlerwert_x, yerr=Fehlerwert_y, capsize=5, label='Absolutwert') 
+
+    ax2 = fig1.add_subplot(1,2,2)
+#    ax1.axis([80, 100, 0.36, 0.4])
+    ax2.set_xlabel("t")
+    ax2.set_ylabel("s")
+    plt.title("Titel")   
+    ax2.grid(True) #Gitternetz
+    
+    ax2.errorbar(messwert1, messwert2,ls='-', marker='', markersize = 0,
+                 xerr=Fehlerwert_x, yerr=Fehlerwert_y, capsize=5, label='Messwert2') 
+
+    ax1.legend(loc=2, markerscale = 1)
+    ax2.legend(loc=2, markerscale = 2)
+    
+    plt.show()   
+
+#zur Legende: 
+    
+#'best'	0
+#'upper right'	1
+#'upper left'	2
+#'lower left'	3
+#'lower right'	4
+#'right'	5
+#'center left'	6
+#'center right'	7
+#'lower center'	8
+#'upper center'	9
+#'center'	10
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
