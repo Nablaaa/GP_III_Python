@@ -28,7 +28,8 @@ def Gauss(Ausgangsfunktion, var, fehler):
         
     return gauss
 
-    def propagation():
+def propagation():
+	pass
 
 
 def main():
